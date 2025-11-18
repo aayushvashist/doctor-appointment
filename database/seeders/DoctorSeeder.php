@@ -12,15 +12,17 @@ class DoctorSeeder extends Seeder
    public function run()
     {
         Doctor::create([
-            'name' => 'Dr. Verma',
-            'email' => 'verma@example.com',
+            'id' => 1,
+            'name' => 'Dr. Thakur',
+            'email' => 'thakur@example.com',
             'phone' => '9876543210',
             'specialization_id' => 2,
         ]);
 
         Doctor::create([
-            'name' => 'Dr. Mehta',
-            'email' => 'mehta@example.com',
+            'id' => 2,
+            'name' => 'Dr. Samta',
+            'email' => 'samta@example.com',
             'phone' => '9123456789',
             'specialization_id' => 3,
         ]);

@@ -14,7 +14,7 @@ class StoreDoctorRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:doctors,email',
             'phone' => 'required|string|max:15',
-            'specialization_id' => 'required|exists:specializations,id',
+            'specialization_id' => 'required|exists:specialties,id',
         ];
     }
 }

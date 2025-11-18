@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doctor;
-// use App\Http\Requests\StoreDoctorRequest;
-// use App\Http\Requests\UpdateDoctorRequest;
+use App\Http\Requests\StoreDoctorRequest;
+use App\Http\Requests\UpdateDoctorRequest;
 use Illuminate\Http\Request;
 
 class DoctorController extends Controller
@@ -31,15 +31,15 @@ class DoctorController extends Controller
         return response()->json($doctor);
     }
 
-    public function update(UpdateDoctorRequest $request, Doctor $doctor)
+    public function update(UpdateDoctorRequest $request, Doctor $id)
     {
-        $doctor->update($request->validated());
-        return response()->json($doctor);
+        $id->update($request->validated());
+        return response()->json($id);
     }
 
-    public function destroy(Doctor $doctor)
+    public function destroy(Doctor $id)
     {
-        $doctor->delete();
+        $id->delete();
         return response()->json(['message' => 'Doctor deleted successfully']);
     }
 }

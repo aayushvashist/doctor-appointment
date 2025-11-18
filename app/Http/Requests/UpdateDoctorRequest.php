@@ -12,9 +12,9 @@ class UpdateDoctorRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:doctors,email,' . $this->doctor->id,
+            'email' => 'required|email|unique:doctors,email,' . $this->route('doctor'),
             'phone' => 'sometimes|string|max:15',
-            'specialization_id' => 'sometimes|exists:specializations,id',
+            'specialization_id' => 'sometimes|exists:specialties,id',
         ];
     }
 }
