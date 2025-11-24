@@ -2,44 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\DoctorSchedule;
-
+use App\Models\Doctor;
+use App\Http\Requests\StoreScheduleRequest;
+use Illuminate\Http\Request;
 
 class DoctorScheduleController extends Controller
 {
     public function index()
     {
-        return DoctorSchedule::with('timeSlots','doctor')->get();
+        $schedules = DoctorSchedule::with('doctor')->orderBy('doctor_id')->get();
+        return view('schedules.index', compact('schedules'));
     }
 
-    public function store(Request $request)
+    public function create()
     {
-        $data = $request->validate([
-            'doctor_id' => 'required|exists:doctors,id',
-            'day'       => 'required|string',
-            'available' => 'required|boolean',
-        ]);
-
-        return DoctorSchedule::create($data);
+        $doctors = Doctor::all();
+        return view('schedules.create', compact('doctors'));
     }
 
-    public function show($id)
+    public function store(StoreScheduleRequest $request)
     {
-        return DoctorSchedule::with('timeSlots')->findOrFail($id);
+        DoctorSchedule::create($request->validated());
+        return redirect()->route('schedules.index')->with('success','Schedule created');
+    }
+
+    public function edit($id)
+    {
+        $schedule = DoctorSchedule::findOrFail($id);
+        $doctors = Doctor::all();
+        return view('schedules.edit', compact('schedule','doctors'));
     }
 
     public function update(Request $request, $id)
     {
         $schedule = DoctorSchedule::findOrFail($id);
 
-        $schedule->update($request->all());
+        // Check duplicate for same doctor, weekday, time range
+        $exists = DoctorSchedule::where('doctor_id', $schedule->doctor_id)
+            ->where('weekday', $request->weekday)
+            ->where('start_time', $request->start_time)
+            ->where('end_time', $request->end_time)
+            ->where('id', '!=', $schedule->id)
+            ->exists();
 
-        return $schedule;
+        if ($exists) {
+            return back()->with('error', 'A schedule for this doctor with the same day and time already exists.');
+        }
+
+        $schedule->update([
+            'weekday' => $request->weekday,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+        ]);
+
+        return redirect()->route('schedules.index')
+            ->with('success', 'Schedule updated successfully!');
     }
+
+
 
     public function destroy($id)
     {
-        return DoctorSchedule::destroy($id);
+        DoctorSchedule::destroy($id);
+        return redirect()->route('schedules.index')->with('success','Schedule deleted');
     }
 }

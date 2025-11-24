@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('doctor_schedules', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('doctor_id');
-            $table->string('weekday'); // Mon, Tue, etc
+            $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
+            $table->unsignedTinyInteger('weekday'); // 0 = Sunday .. 6 = Saturday
             $table->time('start_time');
             $table->time('end_time');
+            $table->unsignedSmallInteger('slot_duration')->default(30); // minutes
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
+            $table->unique(['doctor_id','weekday','start_time','end_time'], 'doctor_schedule_unique');
         });
-
     }
 
     /**

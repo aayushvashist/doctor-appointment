@@ -13,12 +13,17 @@ return new class extends Migration
     {
         Schema::create('time_slots', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('doctor_id');
+            $table->unsignedBigInteger('schedule_id');
             $table->time('start_time');
             $table->time('end_time');
-            $table->date('date');
-            $table->boolean('is_booked')->default(false);
             $table->timestamps();
+
+            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
+            $table->foreign('schedule_id')->references('id')->on('doctor_schedules')->onDelete('cascade');
+
+            // Unique time slot per schedule
+            $table->unique(['schedule_id', 'start_time', 'end_time'], 'unique_slot');
         });
     }
 
