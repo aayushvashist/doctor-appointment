@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Specialty;
+use App\Models\Specialization;
 use App\Models\DoctorSchedule;
 use App\Models\TimeSlot;
 
@@ -20,7 +20,6 @@ class Doctor extends Model
         'name',
         'email',
         'phone',
-        'specialization_id',
     ];
 
     public function user()
@@ -28,9 +27,13 @@ class Doctor extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function specialty()
+    public function specializations()
     {
-        return $this->belongsTo(Specialty::class, 'specialization_id');
+        return $this->belongsToMany(
+        Specialization::class,
+        'doctor_specialization',
+        'doctor_id',
+        'specialization_id');
     }
 
     public function schedules()

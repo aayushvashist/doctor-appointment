@@ -26,6 +26,23 @@ return new class extends Migration
             $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
             $table->foreign('schedule_id')->references('id')->on('doctor_schedules')->onDelete('cascade');
             $table->foreign('time_slot_id')->references('id')->on('time_slots')->onDelete('cascade');
+
+            // Performance Indexes
+            $table->index('doctor_id');
+            $table->index('schedule_id');
+            $table->index('time_slot_id');
+            $table->index('appointment_date');
+            $table->index('status');
+
+            // Composite index
+            $table->index(['doctor_id', 'appointment_date']);
+            
+            // Data integrity
+            $table->unique(
+                ['doctor_id', 'appointment_date', 'time_slot_id'],
+                'unique_doctor_slot_booking'
+            );
+
         });
     }
 

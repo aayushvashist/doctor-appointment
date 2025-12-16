@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Specialty;
+use App\Models\Specialization;
 
 
 class SpecializationSeeder extends Seeder
@@ -14,8 +14,8 @@ class SpecializationSeeder extends Seeder
      */
      public function run()
     {
-        Specialty::create(['name' => 'Cardiologist', 'slug'=> 'cardiologist']);
-        Specialty::create(['name' => 'Dermatologist','slug'=> 'dermatologist']);
-        Specialty::create(['name' => 'Neurologist','slug'=> 'neurologist']);
+        Specialization::create(['name' => 'Cardiologist', 'slug'=> 'cardiologist']);
+        Specialization::create(['name' => 'Dermatologist','slug'=> 'dermatologist']);
+        Specialization::create(['name' => 'Neurologist','slug'=> 'neurologist']);
     }
 }

@@ -20,8 +20,21 @@ return new class extends Migration
             $table->unsignedSmallInteger('slot_duration')->default(30); // minutes
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            // Data integrity
+            $table->unique(
+                ['doctor_id', 'weekday', 'start_time', 'end_time'],
+                'doctor_schedule_unique'
+            );
 
-            $table->unique(['doctor_id','weekday','start_time','end_time'], 'doctor_schedule_unique');
+            // Performance indexes
+            $table->index('doctor_id');
+            $table->index('weekday');
+            $table->index('is_active');
+
+            // Composite performance index
+            $table->index(['doctor_id', 'weekday', 'is_active']);
+
+            // $table->unique(['doctor_id','weekday','start_time','end_time'], 'doctor_schedule_unique');
         });
     }
 

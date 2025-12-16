@@ -26,6 +26,7 @@ class TimeSlotSeeder extends Seeder
 
             foreach ($timeSlots as $slot) {
                 TimeSlot::create([
+                    'doctor_id'   => $schedule->doctor_id,
                     'schedule_id' => $schedule->id,
                     'start_time'  => $slot[0],
                     'end_time'    => $slot[1],

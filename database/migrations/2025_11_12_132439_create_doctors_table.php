@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
-            $table->unsignedBigInteger('specialization_id');
-            $table->foreign('specialization_id')->references('id')->on('specializations')->onDelete('cascade');
+            // $table->unsignedBigInteger('specialization_id');
+            // $table->foreign('specialization_id')->references('id')->on('specializations')->onDelete('cascade');
             $table->timestamps();
         });
     }

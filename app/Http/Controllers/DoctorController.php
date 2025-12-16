@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Doctor;
 use App\Http\Requests\StoreDoctorRequest;
 use App\Http\Requests\UpdateDoctorRequest;
-use App\Models\Specialty;
+use App\Models\Specialization;
 
 use Illuminate\Http\Request;
 
@@ -14,27 +14,44 @@ class DoctorController extends Controller
 
     public function index()
     {
-        $doctors = Doctor::with('specialty')->get();
+        $doctors = Doctor::with('specialization')->get();
         return view('doctors.index', compact('doctors'));
     }
 
     public function create()
     {
-        $specialties = Specialty::all();
+        $specialties = Specialization::all();
         return view('doctors.create', compact('specialties'));
     }
 
     public function edit($id)
     {
         $doctor = Doctor::findOrFail($id);
-        $specialties = Specialty::all();
+        $specialties = Specialization::all();
 
         return view('doctors.edit', compact('doctor', 'specialties'));
     }
 
     public function store(Request $request)
     {
-        Doctor::create($request->all());
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|string|max:20',
+            'specializations' => 'required|array',
+            'specializations.*' => 'exists:specializations,id',
+        ]);
+
+        // 1️⃣ Create doctor WITHOUT specialization
+        $doctor = Doctor::create([
+            'name'  => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ]);
+
+        // 2️⃣ Attach specializations (PIVOT)
+        $doctor->specializations()->attach($request->specializations);
+
         return redirect('/doctors')->with('success', 'Doctor Added');
     }
 
@@ -51,11 +68,21 @@ class DoctorController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'nullable|email',
             'phone' => 'nullable|string|max:20',
-            'specialization_id' => 'nullable|exists:specialties,id'
+            'specializations' => 'required|array',
+            'specializations.*' => 'exists:specializations,id',
         ]);
 
         $doctor = Doctor::findOrFail($id);
-        $doctor->update($request->all());
+        // 1️⃣ Update doctor basic data
+        $doctor->update([
+            'name'  => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ]);
+
+        // 2️⃣ Sync pivot data
+        $doctor->specializations()->sync($request->specializations);
+
 
         return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully.');
     }
