@@ -20,16 +20,16 @@ class DoctorController extends Controller
 
     public function create()
     {
-        $specialties = Specialization::all();
-        return view('doctors.create', compact('specialties'));
+        $specialities = Specialization::select('id', 'name')->get();
+        return view('doctors.create', compact('specialities'));
     }
 
     public function edit($id)
     {
-        $doctor = Doctor::findOrFail($id);
-        $specialties = Specialization::all();
+        $doctor = Doctor::with('specializations')->findOrFail($id);
+        $specialities = Specialization::all();
 
-        return view('doctors.edit', compact('doctor', 'specialties'));
+        return view('doctors.edit', compact('doctor', 'specialities'));
     }
 
     public function store(Request $request)
@@ -67,8 +67,7 @@ class DoctorController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'nullable|email',
             'phone' => 'nullable|string|max:20',
-            'specializations' => 'required|array',
-            'specializations.*' => 'exists:specializations,id',
+            'specialization_ids' => 'required|array',
         ]);
 
         $doctor = Doctor::findOrFail($id);
@@ -80,7 +79,7 @@ class DoctorController extends Controller
         ]);
 
         // 2️⃣ Sync pivot data
-        $doctor->specializations()->sync($request->specializations);
+        $doctor->specializations()->sync($request->specialization_ids);
 
 
         return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully.');

@@ -36,7 +36,7 @@
     </div>
 
     <button type="submit" class="btn btn-success">Save</button>
-    <a href="{{ route('doctors.index') }}" class="btn btn-secondary">Back</a>x
+    <a href="{{ route('doctors.index') }}" class="btn btn-secondary">Back</a>
 
 </form>
 
