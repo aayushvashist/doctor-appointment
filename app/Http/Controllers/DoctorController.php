@@ -14,7 +14,7 @@ class DoctorController extends Controller
 
     public function index()
     {
-        $doctors = Doctor::with('specialization')->get();
+        $doctors = Doctor::with('specializations')->get();
         return view('doctors.index', compact('doctors'));
     }
 
@@ -39,7 +39,6 @@ class DoctorController extends Controller
             'email' => 'nullable|email',
             'phone' => 'nullable|string|max:20',
             'specializations' => 'required|array',
-            'specializations.*' => 'exists:specializations,id',
         ]);
 
         // 1️⃣ Create doctor WITHOUT specialization
@@ -50,7 +49,7 @@ class DoctorController extends Controller
         ]);
 
         // 2️⃣ Attach specializations (PIVOT)
-        $doctor->specializations()->attach($request->specializations);
+        $doctor->specializations()->sync($request->specializations);
 
         return redirect('/doctors')->with('success', 'Doctor Added');
     }

@@ -19,15 +19,13 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->foreignId('specialization_id')
-                ->constrained('specializations')
+                ->constrained()
                 ->cascadeOnDelete();
 
             // Prevent duplicate mapping
             $table->unique(['doctor_id', 'specialization_id']);
 
-            // Performance indexes
-            $table->index('doctor_id');
-            $table->index('specialization_id');
+             $table->timestamps();
         });
 
     }

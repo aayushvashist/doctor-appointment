@@ -8,32 +8,35 @@
     @csrf
 
     <div class="mb-3">
-        <label>Name</label>
+        <label class="form-label">Name</label>
         <input type="text" name="name" class="form-control" required>
     </div>
 
     <div class="mb-3">
-        <label>Email</label>
+        <label class="form-label">Email</label>
         <input type="email" name="email" class="form-control" required>
     </div>
 
     <div class="mb-3">
-        <label>Phone</label>
+        <label class="form-label">Phone</label>
         <input type="text" name="phone" class="form-control" required>
     </div>
 
     <div class="mb-3">
-        <label>Specialization</label>
-        <select class="form-control" name="specialization_id">
-            <option value="">Select</option>
-            @foreach($specialties as $spec)
-            <option value="{{ $spec->id }}">{{ $spec->name }}</option>
+        <label class="form-label">Specializations</label>
+        <select name="specializations[]" class="form-control" multiple required>
+            @foreach($specialities as $spec)
+                <option value="{{ $spec->id }}">
+                    {{ $spec->name }}
+                </option>
             @endforeach
         </select>
+
+        
     </div>
 
-    <button class="btn btn-success">Save</button>
-    <a href="{{ route('doctors.index') }}" class="btn btn-secondary">Back</a>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{{ route('doctors.index') }}" class="btn btn-secondary">Back</a>x
 
 </form>
 

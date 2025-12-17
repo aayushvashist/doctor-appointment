@@ -31,7 +31,13 @@
             <td>{{ $doctor->name }}</td>
             <td>{{ $doctor->email }}</td>
             <td>{{ $doctor->phone }}</td>
-            <td>{{ $doctor->specialty->name ?? '-' }}</td>
+            <td>
+                @if($doctor->specializations->isNotEmpty())
+                    {{ $doctor->specializations->pluck('name')->join(', ') }}
+                @else
+                    -
+                @endif
+            </td>
 
             <td>
                 <a href="{{ route('doctors.edit', $doctor->id) }}" class="btn btn-warning btn-sm">Edit</a>
